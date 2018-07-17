@@ -1,0 +1,29 @@
+{
+  "name": "kijiji",
+  "version": "1.0.0",
+  "description": "Kijiji Autoposter",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dariuszlee/kijiji.git"
+  },
+  "keywords": [
+    "kijiji",
+    "automated"
+  ],
+  "author": "Darius Lee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dariuszlee/kijiji/issues"
+  },
+  "homepage": "https://github.com/dariuszlee/kijiji#readme",
+  "dependencies": {
+    "casperjs": "^1.1.4"
+  }
+}
