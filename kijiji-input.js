@@ -21,7 +21,39 @@ casper.thenOpen('https://www.kijiji.ca/p-admarkt-post-ad.html?categoryId=613&adT
 
 casper.waitForUrl('https://www.kijiji.ca/p-admarkt-post-ad.html?categoryId=613&adTitle=asdfasdf', function() {
 	this.echo("Finished waiting for: " + this.getCurrentUrl())
-	this.capture('signin.png')
+	this.evaluate(function() {
+		var submitBut = document.querySelector("button[name^=saveAndCheckout]");
+		if(submitBut != null)
+		{
+			submitBut.click()
+		}
+		else {
+			console.log("Not Found")
+		}
+	});
+});
+
+casper.waitForSelector('.error', function() {
+	console.log("Searchign")
+	if(this.exists('.error')){
+		utils.dump(this.getElementsInfo('.error'))
+	}
+	else{
+		console.log("Not Found")
+	}
+	this.evaluate(function() {
+		var errorMessages = document.querySelector("label[class=error]");
+		console.log(errorMessages)
+		if(errorMessages.count != 0)
+		{
+			errorMessages.forEach(function(ele) {
+				console.log("Found")
+			});
+		}
+		else {
+			console.log("No error messages found.")
+		}
+	});
 });
 
 // casper.waitForUrl('https://www.kijiji.ca/p-select-category.html', function(){
