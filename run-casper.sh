@@ -6,4 +6,5 @@ if [[ -d $phantomBin ]];then
 fi
 
 
-./node_modules/casperjs/bin/casperjs --ssl-protocol=any --ignore-ssl-errors=yes kijiji-input.js
+./node_modules/casperjs/bin/casperjs --ssl-protocol=any --ignore-ssl-errors=yes ./casper-tests/kijiji-load-form.js
+
