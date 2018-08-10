@@ -2,6 +2,7 @@ bin/
 lib/
 include/
 __pycache__/
+node_modules/
 
 *.swp
 
