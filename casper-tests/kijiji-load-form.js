@@ -30,33 +30,7 @@ casper.waitForSelector('.error', function() {
 	else{
 		console.log("Not Found")
 	}
-	this.evaluate(function() {
-		var errorMessages = document.querySelector("label[class=error]");
-		console.log(errorMessages)
-		if(errorMessages.count != 0)
-		{
-			errorMessages.forEach(function(ele) {
-				console.log("Found")
-			});
-		}
-		else {
-			console.log("No error messages found.")
-		}
-	});
 });
-
-// casper.waitForUrl('https://www.kijiji.ca/p-select-category.html', function(){
-// 	this.echo("Finished waiting for: " + this.getCurrentUrl())
-// 	this.capture('signin.png')
-// })
-
-// casper.then(function() {
-// 	this.evaluate(function() {
-// 		document.getElementByTagName('textarea').value="";
-// 		document.getElementById("login-password").value="spU7p9tR!";
-// 		document.getElementById("SignInButton").click();
-// 	});
-// });
 
 casper.run();
 
