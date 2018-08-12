@@ -23,14 +23,9 @@ casper.waitForUrl('https://www.kijiji.ca/p-admarkt-post-ad.html?categoryId=613&a
 });
 
 casper.waitForSelector('.error', function() {
-	console.log("Searchign")
-	if(this.exists('.error')){
-		utils.dump(this.getElementsInfo('.error'))
-	}
-	else{
-		console.log("Not Found")
-	}
+	var ele = this.getElementsInfo('.error')
+	var newEles = ele.filter(function(e) { return e.attributes.name != undefined}).map(function(e){ return e.attributes.name })
+	utils.dump(newEles)
 });
 
 casper.run();
-
