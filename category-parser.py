@@ -1,99 +1,58 @@
 import json
 import requests
-import pprint
 
-from login import login
-
-import asyncio
-import concurrent.futures
-
-def getCategoryData():
-    with open('./data/categories.json') as jsonFile:
-        return json.load(jsonFile)
+from tornado import ioloop, httpclient
+from functools import partial
 
 def getCategoryHead():
     r = requests.get('https://www.kijiji.ca/j-select-category.json?categoryId=0')
     return r.json()['level1']['items']
 
-def lvlOnlyLeaves(lvlData):
-    for d in lvlData:
-        if not d['leaf']:
-            return False
-    return True
-
-def getNextLevel(curLvl, curData):
-    lvlString = 'level{0}'.format(curLvl+1)
-    allLvlData = []
-    for d in curData:
-        if not d['leaf']:
-            url = 'https://www.kijiji.ca/j-select-category.json?categoryId={0}'.format(d['categoryId'])
-            r = requests.get(url)
-            try:
-                allLvlData = allLvlData + r.json()[lvlString]['items']
-            except:
-                print("Error dealing with ", d['name'])
-                print(url)
-                print(r.json())
-            finally:
-                print("Finished dealing with ", d['name'])
-    return allLvlData
-
-# s = requests.Session()
-# s = login(s)
-
-# allCategories = dict()
-
-# lvl = 0
-# allCategories[lvl] = getCategoryHead()
-# while not lvlOnlyLeaves( allCategories[lvl] ):
-#     lvl += 1
-#     allCategories[lvl] = getNextLevel(lvl, allCategories[lvl - 1])
-#     print(lvl)
-
-async def getCategoryData(catId):
-    url = 'https://www.kijiji.ca/j-select-category.json?categoryId={0}'.format(catId)
-    r = requests.get(url)
-
-def getAllNodes(data):
+def getAllNonLeaves(data):
     for d in data:
         if not d['leaf']:
             yield d
-            
-async def getNodeData(node):
-    await getCategoryData(node['categoryId'])
-    print(node['name'])
 
-async def getAllData():
-    print("Starting collection")
-    data = getCategoryHead()
-    nodes = list(getAllNodes(data))
-    for n in nodes:
-        await getNodeData(n)
+allCategories = dict()
+def printLevelData(data, levelId):
+    if levelId in allCategories.keys():
+        allCategories[levelId] = allCategories[levelId] + data
+    else:
+        allCategories[levelId] = data
 
-    # with concurrent.futures.ThreadPoolExecutor(max_worker=20) as executor:
-    #     loop = asyncio.get_event_loop()
-    #     futures = [
-    #         loop.run.
-    #     ]
+def handleNewData(data, levelId, parent):
+    for i in data:
+        i['parent'] = parent
+    printLevelData(data, levelId)
+    nonLeaves = getAllNonLeaves(data)
+    for i in nonLeaves:
+        handleNode(i, levelId)
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(getAllData())
+num_requests = 0
+def handle_request(levelId, catId, response):
+    levelStr = 'level{0}'.format(levelId)
+    data = json.loads(response.body)
+    data = data[levelStr]['items']
 
-# allCategories = { 'level1' : [], 'level2' : [], 'level3': [], 'level4' : []}
-# allCategories['level1'] = getLevel1CategoriesUrl()
-# for i in allCategories['level1']:
-#     print(i['name'])
-#     allCategories['level2'] = allCategories['level2'] + getLevelCategoriesUrl(i['categoryId'])
+    global num_requests
+    num_requests = num_requests - 1
+    handleNewData(data, levelId, catId)
+    if num_requests == 0:
+        ioloop.IOLoop.instance().stop()
 
-# for i in allCategories['level2']:
-#     if not i['leaf']:
-#         print('Searching: ' + i['name'])
-#         allCategories['level3'] = allCategories['level3'] + getLevelCategoriesUrl(i['categoryId']) 
+http_client = httpclient.AsyncHTTPClient()
+def handleNode(node, levelId):
+    catId = node['categoryId']
+    url = 'https://www.kijiji.ca/j-select-category.json?categoryId={0}'.format(catId)
 
-# for i in allCategories['level3']:
-#     if not i['leaf']:
-#         print('Searching: ' + i['name'])
-#         allCategories['level4'] = allCategories['level4'] + getLevelCategoriesUrl(i['categoryId']) 
+    global num_requests 
+    num_requests = num_requests + 1
+    http_client.fetch(url, partial(handle_request, levelId + 1, catId), method='GET')
 
-# with open('./data/all-categories.json', mode='w') as jsonFile:
-#     json.dump(allCategories, jsonFile)
+data = getCategoryHead()
+handleNewData(data, 1, 0)
+
+ioloop.IOLoop.instance().start()
+
+with open('./data/all-categories.json', mode='w') as f:
+    json.dump(allCategories, f)

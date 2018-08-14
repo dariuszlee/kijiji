@@ -41,6 +41,11 @@ def __get_login(easy):
         info['password'] = getpass.getpass('Enter kijiji password: ') 
     return info
 
+def new_session():
+    session = requests.Session()
+    login(session)
+    return session
+
 if __name__ == '__main__':
     session = requests.Session()
     login(session)
