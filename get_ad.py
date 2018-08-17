@@ -7,7 +7,6 @@ def get_ads(sess):
     r = requests.Request('GET', 'https://www.kijiji.ca/my/ads')
     p = sess.prepare_request(r)
     resp = sess.send(p).json()['ads']
-
     parsed = [{a : b for a, b in y.items() if a in ['id', 'views', 'title']} for y in resp.values()]
 
     for ad in parsed:

@@ -14,6 +14,11 @@ def getAllNonLeaves(data):
             yield d
 
 allCategories = dict()
+allCategoriesDict = dict()
+def printDataFlat(data):
+    for d in data:
+        allCategoriesDict[int(d['categoryId'])] = d
+
 def printLevelData(data, levelId):
     if levelId in allCategories.keys():
         allCategories[levelId] = allCategories[levelId] + data
@@ -24,6 +29,7 @@ def handleNewData(data, levelId, parent):
     for i in data:
         i['parent'] = parent
     printLevelData(data, levelId)
+    printDataFlat(data)
     nonLeaves = getAllNonLeaves(data)
     for i in nonLeaves:
         handleNode(i, levelId)
@@ -56,3 +62,6 @@ ioloop.IOLoop.instance().start()
 
 with open('./data/all-categories.json', mode='w') as f:
     json.dump(allCategories, f)
+
+with open('./data/all-categories-flat.json', mode='w') as f:
+    json.dump(allCategoriesDict, f)
