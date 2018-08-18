@@ -4,6 +4,47 @@ import requests
 from tornado import ioloop, httpclient
 from functools import partial
 
+def load_child_categories(catId):
+    with open('./data/all-categories.json', 'r') as f:
+        data = json.load(f)
+        for d in data.values():
+            for ind in d:
+                if ind['parent'] == catId and ind['leaf']:
+                    yield ind['categoryId']
+
+def num_of_leaves():
+    with open('./data/all-categories-flat.json', 'r') as f:
+        data = json.load(f)
+        numLeaves = 0
+        for d in data.values():
+            if d['leaf']:
+                numLeaves += 1
+        return numLeaves
+
+def num_of_nodes():
+    with open('./data/all-categories-flat.json', 'r') as f:
+        data = json.load(f)
+        numNodes = 0
+        for d in data.values():
+            if not d['leaf']:
+                numNodes += 1
+        return numNodes
+
+def load_child_flat(catId):
+    with open('./data/all-categories-flat.json', 'r') as f:
+        data = json.load(f)
+        for d in data.values():
+            if d['leaf'] and isLeafChildOf(data, d['categoryId'], catId):
+                yield d['categoryId']
+
+def isLeafChildOf(data, leafId, catId):
+    if leafId == 0:
+        return False
+    elif leafId == catId:
+        return True
+    else:
+        return isLeafChildOf(data, data[str(leafId)]['parent'], catId)
+
 def getCategoryHead():
     r = requests.get('https://www.kijiji.ca/j-select-category.json?categoryId=0')
     return r.json()['level1']['items']
@@ -55,13 +96,14 @@ def handleNode(node, levelId):
     num_requests = num_requests + 1
     http_client.fetch(url, partial(handle_request, levelId + 1, catId), method='GET')
 
-data = getCategoryHead()
-handleNewData(data, 1, 0)
+if __name__ == '__main__':
+    data = getCategoryHead()
+    handleNewData(data, 1, 0)
 
-ioloop.IOLoop.instance().start()
+    ioloop.IOLoop.instance().start()
 
-with open('./data/all-categories.json', mode='w') as f:
-    json.dump(allCategories, f)
+    with open('./data/all-categories.json', mode='w') as f:
+        json.dump(allCategories, f)
 
-with open('./data/all-categories-flat.json', mode='w') as f:
-    json.dump(allCategoriesDict, f)
+    with open('./data/all-categories-flat.json', mode='w') as f:
+        json.dump(allCategoriesDict, f)

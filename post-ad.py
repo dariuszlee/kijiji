@@ -8,18 +8,32 @@ import json
 import login
 from get_ad import *
 from delete_ad import *
+from RequestUtils import *
 
 from tornado import ioloop, httpclient
 
 from pprint import pprint
 import urllib
+from functools import partial
 
-def create_ad(s, categoryId):
+def handle_getad(catId, response):
+    print("Finished getting category:", catId, "with code:", response.code)
+
+async def get_ad_form(cookies, categoryId):
     url = 'https://www.kijiji.ca/p-post-ad.html?categoryId={0}'.format(categoryId)
-    r3 = requests.Request('GET', url)
-    prepped3 = s.prepare_request(r3)
-    resp3 = s.send(prepped3)
-    html = lxml.html.fromstring(resp3.text).forms[0]
+    client = httpclient.AsyncHTTPClient()
+    httpmethod = "GET"
+    nativeCookies = { "Cookie": generate_cookie_str(cookies) }
+    request = httpclient.HTTPRequest(url, method=httpmethod, headers=nativeCookies)
+    return await client.fetch(request, partial(handle_getad, categoryId))
+
+async def create_ad(s, categoryId):
+    cookies = s.cookies.get_dict()
+    response = await get_ad_form(cookies, categoryId)
+    # r3 = requests.Request('GET', url)
+    # prepped3 = s.prepare_request(r3)
+    # resp3 = s.send(prepped3)
+    html = lxml.html.fromstring(response.body).forms[0]
 
     parsed = parse_html(html)
     parsed = remove_empty(parsed)
@@ -54,14 +68,24 @@ def create_ad(s, categoryId):
     parsed['submitType']=['saveAndCheckout']
 
     postBody = urllib.parse.urlencode(parsed, doseq=True)
-    r4 = requests.Request('POST', 'https://www.kijiji.ca/p-submit-ad.html', data=postBody)
-    prepped4 = s.prepare_request(r4)
-    prepped4.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-    resp4 = s.send(prepped4)
-    if resp4.url == "https://www.kijiji.ca/p-submit-ad.html":
+    return await send_create(cookies, postBody)
+
+def handle_create(response):
+    print("Finished creating")
+
+async def send_create(cookies, data):
+    client = httpclient.AsyncHTTPClient()
+    httpmethod = "POST"
+    url = "https://www.kijiji.ca/p-submit-ad.html"
+    nativeCookies = { 'Content-Type': 'application/x-www-form-urlencoded',
+            "Cookie": generate_cookie_str(cookies) }
+    request = httpclient.HTTPRequest(url, method=httpmethod, body=data, headers=nativeCookies)
+    response = await client.fetch(request, handle_create)
+    if response.effective_url == "https://www.kijiji.ca/p-submit-ad.html":
         return (False, None)
-    adId = urllib.parse.parse_qs(urllib.parse.urlparse(resp4.url).query)['adId'][0]
+    adId = urllib.parse.parse_qs(urllib.parse.urlparse(response.effective_url).query)['adId'][0]
     return (True, adId)
+
 
 def parse_html(html):
     r = {}
@@ -80,56 +104,16 @@ def remove_empty(parsed):
             r[i[0]] = i[1]
     return r
 
-def load_child_categories(catId):
-    with open('./data/all-categories.json', 'r') as f:
-        data = json.load(f)
-        for d in data.values():
-            for ind in d:
-                if ind['parent'] == catId and ind['leaf']:
-                    yield ind['categoryId']
-
-def num_of_leaves():
-    with open('./data/all-categories-flat.json', 'r') as f:
-        data = json.load(f)
-        numLeaves = 0
-        for d in data.values():
-            if d['leaf']:
-                numLeaves += 1
-        return numLeaves
-
-def num_of_nodes():
-    with open('./data/all-categories-flat.json', 'r') as f:
-        data = json.load(f)
-        numNodes = 0
-        for d in data.values():
-            if not d['leaf']:
-                numNodes += 1
-        return numNodes
-
-def load_child_flat(catId):
-    with open('./data/all-categories-flat.json', 'r') as f:
-        data = json.load(f)
-        for d in data.values():
-            if d['leaf'] and isLeafChildOf(data, d['categoryId'], catId):
-                yield d['categoryId']
-
-def isLeafChildOf(data, leafId, catId):
-    if leafId == 0:
-        return False
-    elif leafId == catId:
-        return True
-    else:
-        return isLeafChildOf(data, data[str(leafId)]['parent'], catId)
 
 failed = []
 async def createTestAndDelete(s, a):
-    res = create_ad(s, a)
+    res = await create_ad(s, a)
     print(res)
     global failed
     if not res[0]:
         failed.append(a)
     else:
-        delete_ad(s, res[1])
+        await delete_ad(s, res[1])
 
             
 # print("Num leaves:", num_of_leaves(), "Num nodes:", num_of_nodes())
@@ -139,10 +123,8 @@ async def main():
     print("Num of leafs in category", catId, "is", len(children))
 
     s = login.new_session()
-    children = [12, 613]
     for a in children:
         await createTestAndDelete(s, a)
-
     print("Failed catIds:", failed)
 
 

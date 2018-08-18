@@ -7,25 +7,28 @@ import login
 from tornado import ioloop, httpclient
 from http.cookies import SimpleCookie
 
-def delete_ad(sess, adId):
+from RequestUtils import *
+from functools import partial
+
+# def delete_ad(sess, adId):
+#     url = str('https://www.kijiji.ca/my/ad/{0}').format(adId)
+    # req = requests.Request('DELETE', url)
+    # prepped = sess.prepare_request(req)
+    # resp = sess.send(prepped)
+
+async def delete_ad(sess, adId):
+    nativeCookies = generate_cookies(sess.cookies.get_dict())
+    client = httpclient.AsyncHTTPClient()
     url = str('https://www.kijiji.ca/my/ad/{0}').format(adId)
-    req = requests.Request('DELETE', url)
-    prepped = sess.prepare_request(req)
-    resp = sess.send(prepped)
+    method = "DELETE"
+    request = httpclient.HTTPRequest(url, method='DELETE', headers=nativeCookies)
+    await client.fetch(request, partial(handle_delete, adId))
 
-def handle_delete(resp):
-    print('Deletion request returned with code: '+ str(resp.code))
-
-def generate_cookies(cookies):
-    cookieStr = ""
-    for cookie in cookies.items():
-        cookieStr += cookie[0] + "=" + cookie[1] + "; "
-
-    return {"Cookie": cookieStr}
+def handle_delete(adId, response):
+    print("Deletion of ad:", adId, "returned with code: "+ str(response.code))
 
 async def delete_all():
     print("Delete all ads")
-
     sess = login.new_session()
     cookies = sess.cookies.get_dict()
     nativeCookies  = generate_cookies(cookies)
