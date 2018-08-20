@@ -19,8 +19,14 @@ from tornado import ioloop, httpclient
 # newFailed = copy.copy(PostAdAsync.failed)
 # PostAdAsync.failed = []
         
+sessionStr = RequestUtils.get_session()
 failed = [12, 646, 772, 776, 773, 782, 760]
-with open('./data/all-categories-flat.json', 'r') as flatFile:
-    allData = json.load(flatFile)
+with open('./data/failed-data-fields.json', 'r') as failedFieldFile:
+    failedFields = json.load(failedFieldFile)
     for d in failed:
-        print(allData[str(d)])
+        PostAdAsync.get_ad(d, sessionStr, None)
+ioloop.IOLoop.instance().start()
+# with open('./data/all-categories-flat.json', 'r') as flatFile:
+#     allData = json.load(flatFile)
+#     for d in failed:
+#         print(allData[str(d)])

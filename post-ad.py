@@ -27,7 +27,7 @@ async def get_ad_form(cookies, categoryId):
     request = httpclient.HTTPRequest(url, method=httpmethod, headers=nativeCookies)
     return await client.fetch(request, partial(handle_getad, categoryId))
 
-async def create_ad(s, categoryId):
+async def create_ad(s, categoryId, extraFields = None):
     cookies = s.cookies.get_dict()
     response = await get_ad_form(cookies, categoryId)
     # r3 = requests.Request('GET', url)
@@ -66,6 +66,8 @@ async def create_ad(s, categoryId):
     parsed['postAdForm.phoneNumber']=['']
     parsed['featuresForm.topAdDuration']=['7']
     parsed['submitType']=['saveAndCheckout']
+    for f in extraFields:
+        print(f)
 
     postBody = urllib.parse.urlencode(parsed, doseq=True)
     return await send_create(cookies, postBody)

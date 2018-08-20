@@ -4,6 +4,7 @@ from json import dump
 import login
 import RequestUtils
 import KijijiCategories
+from KijijiGlobal import KijijiGlobal
 import delete_ad
 
 from tornado import ioloop, httpclient
@@ -54,13 +55,20 @@ def remove_empty(parsed):
             r[i[0]] = i[1]
     return r
 
-def handle_getad(categoryId, sessionStr, response):
+def handleExtraFields(extraField, toAddTo):
+    for k in extraField:
+        toAddTo[k[0]] = [k[1][0]]
+
+def handle_getad(categoryId, sessionStr, extraFields, response):
     try:
+        kijGlobals = KijijiGlobal()
         print("Finished getting category:", categoryId, "with code:", response.code)
         respBody = response.body.decode('utf-8', 'ignore')
         html = lxml.html.fromstring(respBody).forms[0]
         parsed = parse_html(html)
         parsed = remove_empty(parsed)
+        if str(categoryId) in kijGlobals.ExtraFields.keys():
+            handleExtraFields(kijGlobals.ExtraFields[str(categoryId)], parsed)
         parsed['images']=['']
         parsed['uuid']=['']
         parsed['adId']=['']
@@ -100,17 +108,19 @@ def handle_getad(categoryId, sessionStr, response):
                 "Cookie": sessionStr}
         request = httpclient.HTTPRequest(url, method=httpmethod, body=postBody, headers=nativeCookies)
         client.fetch(request, partial(handle_create, categoryId, sessionStr))
-    except:
+    except Exception as e:
+        print(e)
+        print("Failed catId:", categoryId)
         global failed
         failed.append(categoryId)
 
-def get_ad(categoryId, sessionStr):
+def get_ad(categoryId, sessionStr, extraFields = None):
     url = 'https://www.kijiji.ca/p-post-ad.html?categoryId={0}'.format(categoryId)
     client = httpclient.AsyncHTTPClient()
     httpmethod = "GET"
     nativeCookies = { "Cookie": sessionStr }
     request = httpclient.HTTPRequest(url, method=httpmethod, headers=nativeCookies)
-    client.fetch(request, partial(handle_getad, categoryId, sessionStr))
+    client.fetch(request, partial(handle_getad, categoryId, sessionStr, extraFields))
 
 def main(session, toTest):
     for c in toTest:

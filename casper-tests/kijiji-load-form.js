@@ -11,7 +11,7 @@ login.tryLogin(casper)
 
 function testPage(casper, catId, addToGlobal)
 {
-	allAttributes = []
+	var allAttributes = []
 
 	const url = "https://www.kijiji.ca/p-admarkt-post-ad.html?categoryId=" + catId
 	casper.thenOpen(url)
@@ -29,7 +29,6 @@ function testPage(casper, catId, addToGlobal)
 		});
 	});
 
-	errors = {}
 	casper.waitForSelector('.error', function() {
 		var ele = this.getElementsInfo('.error')
 		var newEles = ele.filter(function(e) { return e.attributes.name != undefined}).map(function(e){ 
@@ -96,8 +95,8 @@ failed.forEach(function(e){
 })
 
 casper.on('run.complete', function(){
+    utils.dump(allData)
 	allDataToStr = JSON.stringify(allData)
-	utils.dump(allDataToStr)
 	// fs.writeFile('./failed-categories-missing.json', allDataToStr, function(e){
 	// 	if (e) throw e;
 	// 	console.log('The file has been saved!');
