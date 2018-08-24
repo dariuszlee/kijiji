@@ -14,6 +14,12 @@ class _KijijiGlobals:
         _KijijiGlobals.__getExtraFields(self)
         _KijijiGlobals.__getCategoriesFlat(self)
         _KijijiGlobals.__getCategoriesLvls(self)
+        _KijijiGlobals.__getBuySellFields(self)
+
+    def __getBuySellFields(self):
+        print("Getting buy/sell fields")
+        with open('./data/buy-sell-fields.json', 'r') as f:
+            self.BuySellFields = load(f)
 
     def __getExtraFields(self):
         print("Getting extra fields")
@@ -32,4 +38,4 @@ class _KijijiGlobals:
 
 if __name__ == "__main__":
     glob1 = KijijiGlobal()
-    print(glob1.ExtraFields)
+    print(glob1.BuySellFields)

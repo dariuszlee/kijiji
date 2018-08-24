@@ -14,6 +14,24 @@ def get_ads(sess):
 
     return parsed
 
+def get_ads_sessStr(sessStr):
+    headers = { 'Cookie' : sessStr}
+    resp = requests.get('https://www.kijiji.ca/my/ads', headers=headers).json()['ads']
+    parsed = [{a : b for a, b in y.items() if a in ['id', 'views', 'title']} for y in resp.values()]
+
+    for ad in parsed:
+        ad['page'] = get_ad_page_sessStr(sessStr, ad['id'])
+
+    return parsed
+
+def get_ad_page_sessStr(sessStr, adId):
+    headers = { 'Cookie' : sessStr}
+    url = 'https://www.kijiji.ca/my/ranks?ids={0}'.format(adId)
+    resp = requests.get(url, headers=headers)
+    respData = resp.json()['ranks'][str(adId)]
+    return respData
+    
+
 def get_ad_page(sess, adId):
     url = 'https://www.kijiji.ca/my/ranks?ids={0}'.format(adId)
     r = requests.Request('GET', url)

@@ -1,0 +1,17 @@
+{
+    "images":"",
+    "categoryId":"",
+    "postAdForm.locationId":["1700185"],
+    "postAdForm.postalCode":"",
+    "postAdForm.showLocationOnMap":["false"],
+    "postAdForm.saveLocation":["true"],
+    "postAdForm.mapRadius":["80"],
+    "postAdForm.adType":["OFFER"],
+    "postAdForm.priceType":["FIXED"],
+    "postAdForm.priceAmount":"",
+    "postAdForm.attributeMap[forsaleby_s]":["ownr"],
+    "postAdForm.title":"",
+    "postAdForm.description":"",
+    "featuresForm.topAdDuration" : ["7"]
+}
+
