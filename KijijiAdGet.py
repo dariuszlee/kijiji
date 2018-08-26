@@ -15,7 +15,15 @@ class KijijiAdGet:
         self.Session = sessStr
         self.IsRunning = False
         self.RequestsRunning = set()
+
+    def Run_Repost():
+        sess = get_session()
+        ads = [ str(f['id']) for f in get_ads_sessStr(sess) if f['page'] > 1]
+        print("Reposting:", ads)
+        adGetter = KijijiAdGet(sess)
+        adGetter.RepostAds(ads)
     
+
     def RepostAds(self, adIds):
         if type(adIds) == str:
             adIds = [adIds]
@@ -29,7 +37,8 @@ class KijijiAdGet:
             self.__RepostAd(ad)
 
         self.IsRunning = True
-        ioloop.IOLoop.instance().start()
+        # if ioloop.IOLoop.instance(Vj
+        # ioloop.IOLoop.instance().start()
 
     def __RepostAd(self, adId):
         if self.IsRunning == True:
@@ -45,8 +54,8 @@ class KijijiAdGet:
 
     def __OnFinish(self, adId):
         self.RequestsRunning.remove(adId)
-        if len(self.RequestsRunning) == 0:
-            ioloop.IOLoop.instance().stop()
+        # if len(self.RequestsRunning) == 0:
+            # ioloop.IOLoop.instance().stop()
     
     def __OnSuccessDelete(self, adId, response):
         print("Deletion of ad:", adId, "returned with code: "+ str(response.code))
@@ -94,8 +103,4 @@ class KijijiAdGet:
         return fields
 
 if __name__ == "__main__":
-    sess = get_session()
-    ads = [ str(f['id']) for f in get_ads_sessStr(sess) if f['page'] > 1]
-    print("Reposting:", ads)
-    adGetter = KijijiAdGet(sess)
-    adGetter.RepostAds(ads)
+    KijijiAdGet.Run_Repost()
