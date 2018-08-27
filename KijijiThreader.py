@@ -20,6 +20,8 @@ def start_program():
 
 if __name__ == "__main__":
     loop = ioloop.IOLoop.instance()
+    loop.handle_callback_exception(start_program())
+
     t = Thread(target=start_loop, args=(loop,))
     t.start()
 
