@@ -8,4 +8,5 @@ casper-dump/
 page-compare.html/
 
 *.swp
-
+pip-selfcheck.json
+*.pyc
