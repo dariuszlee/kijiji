@@ -18,7 +18,7 @@ class KijijiAdGet:
 
     def Run_Repost():
         sess = get_session()
-        ads = [ str(f['id']) for f in get_ads_sessStr(sess) if f['page'] > 1]
+        ads = [ str(f['id']) for f in get_ads_sessStr(sess) if f.get('page') > 1]
         print("Reposting:", ads)
         adGetter = KijijiAdGet(sess)
         adGetter.RepostAds(ads)
