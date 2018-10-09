@@ -18,7 +18,7 @@ class KijijiAdGet:
 
     def Run_Repost():
         sess = get_session()
-        ads = [ str(f['id']) for f in get_ads_sessStr(sess) if f['page'] > 1]
+        ads = [ str(f['id']) for f in get_ads_sessStr(sess) if f.get('page') > 1]
         print("Reposting:", ads)
         adGetter = KijijiAdGet(sess)
         adGetter.RepostAds(ads)
@@ -52,6 +52,9 @@ class KijijiAdGet:
         request = httpclient.HTTPRequest(url, method=httpmethod, headers=nativeCookies)
         client.fetch(request, partial(self.__readResponse, adId))
 
+    def RepostAd(self, adId):
+        self.__RepostAd(adId)
+
     def __OnFinish(self, adId):
         self.RequestsRunning.remove(adId)
         # if len(self.RequestsRunning) == 0:
@@ -79,7 +82,6 @@ class KijijiAdGet:
 
         get_ad(fields['categoryId'][0], self.Session, fields, cbs)
 
-
     def __readCurrentAdFailed(self, prevAdId, response):
         print("Failed with error code:", response.code)
         print("Error is:", response.error)
@@ -99,8 +101,14 @@ class KijijiAdGet:
                 else:
                     fieldValue = i.get('value')
                     if i.get('value') != None:
-                        fields[fieldName] = [fieldValue]
+                        if fieldName == 'images':
+                            fields[fieldName] = fields[fieldName] + [i.get('value')]
+                        else:
+                            fields[fieldName] = [fieldValue]
         return fields
 
 if __name__ == "__main__":
-    KijijiAdGet.Run_Repost()
+    sess = get_session()
+    getter = KijijiAdGet(sess)
+    getter.RepostAd(1379599031)
+    ioloop.IOLoop.instance().start()
