@@ -1,15 +1,35 @@
+$header-height : 50px;
+$footer-height : 50px;
+
 .dzlyy-header {
-    height : 70px;
+    height : $header-height;
     position : absolute;
     width : 100%;
     border-bottom: solid 1px;
 }
 
 .dzlyy-content {
-    margin-top: 70px;
+    margin-top: $header-height;
     position : absolute;
+    width : 100%;
+    // min-height : 100% - $header-height;
+    min-height : calc(100% - #{$footer-height});
 }
 
 .dzlyy-body {
-    height : 900px;
+    margin-bottom : -$footer-height;
+    height : 100%;
+}
+
+.dzlyy-app{
+}
+
+.dzlyy-footer-push {
+    height : $footer-height;
+}
+
+.dzlyy-footer {
+    height : $footer-height;
+    width : 100%;
+    border-top : solid 1px;
 }
