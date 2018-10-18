@@ -10,3 +10,5 @@ page-compare.html/
 *.swp
 pip-selfcheck.json
 *.pyc
+
+package-lock.json

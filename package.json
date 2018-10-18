@@ -25,6 +25,7 @@
   "homepage": "https://github.com/dariuszlee/kijiji#readme",
   "dependencies": {
     "casperjs": "^1.1.4",
+    "gulp": "^3.9.1",
     "phantomjs": "^2.1.7"
   }
 }

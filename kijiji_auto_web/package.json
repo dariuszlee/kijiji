@@ -1,0 +1,14 @@
+{
+  "name": "kijiji_auto_web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "gulp-sass": "^4.0.2"
+  }
+}
