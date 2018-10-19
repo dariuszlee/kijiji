@@ -1,6 +1,5 @@
 var gulp = require('gulp')
 var sass = require('gulp-sass')
-var babel = require('gulp-babel')
 
 var webpack = require('webpack')
 const webpackStream = require('webpack-stream');
@@ -23,4 +22,4 @@ gulp.task('react', function(){
         .pipe(gulp.dest('spa/static/'));
 });
 
-gulp.task('default', ['watch']);
+gulp.task('default', ['styles', 'react', 'watch']);
