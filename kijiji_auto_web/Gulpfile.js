@@ -15,13 +15,13 @@ gulp.task('styles', function() {
 
 gulp.task('babel', function(){
     return gulp.src('spa/jsx/*.jsx')
-        .pipe(babel({plugins: ['transform-react-jsx']}))
+        .pipe(babel({plugins: ['transform-react-jsx'], presets: ['@babel/env']}))
         .pipe(gulp.dest('spa/js/'))
 })
 
 gulp.task('react', ['babel'], function(){
     return gulp.src('spa/js/*.js')
-        .pipe(webpackStream(webpackConfig), webpack)
+        .pipe(webpackStream(webpackConfig))
         .pipe(gulp.dest('spa/static/'));
 });
 
@@ -32,7 +32,7 @@ gulp.task('imgs', function(){
 
 gulp.task('watch', function() {
     gulp.watch('spa/scss/*', ['styles'])
-    gulp.watch('spa/js/*', ['react'])
+    gulp.watch('spa/jsx/*', ['react'])
     gulp.watch('assets/*.png', ['imgs'])
 });
 

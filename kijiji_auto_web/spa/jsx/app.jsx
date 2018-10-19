@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Main from 'main.js'
+import Main from './main'
 
+const mainApp = <Main />;
 ReactDOM.render(
-  <Main />,
-  document.getElementById('dzlyy-react-app')
+    mainApp,
+    document.getElementById('dzlyy-react-app')
 )

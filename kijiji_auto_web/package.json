@@ -17,13 +17,14 @@
     "gulp-sass": "^4.0.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "webpack": "^4.21.0",
     "webpack-stream": "^5.1.1"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.1.0",
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
-    "gulp-babel": "^8.0.0"
+    "gulp-babel": "^8.0.0",
+    "webpack": "^4.21.0",
+    "webpack-command": "^0.4.1"
   }
 }

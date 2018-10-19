@@ -1,7 +1,14 @@
 module.exports = {
+  // entry: {
+  //     files : [
+  //         'spa/js/app.js',
+  //         'spa/js/main.js'
+  //     ]
+  // },
   output: {
     filename: 'app.js',
   },
+  mode : 'development',
   optimization: {
     minimize : false
   },
@@ -13,8 +20,8 @@ module.exports = {
         loader: 'babel-loader',
         query: {
           presets: [
-              ['@babel/env', { modules: false }],
-              ['@babel/react', { modules: false }],
+              '@babel/env',
+              '@babel/react'
           ],
         },
       },
