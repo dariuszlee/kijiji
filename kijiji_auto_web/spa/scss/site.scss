@@ -1,11 +1,35 @@
-$header-height : 50px;
+$header-height : 100px;
+
+$header-top : 20px;
+$header-bottom : $header-height - $header-top;
+
 $footer-height : 50px;
 
 .dzlyy-header {
     height : $header-height;
     position : absolute;
     width : 100%;
-    border-bottom: solid 1px;
+}
+
+.dzlyy-header-top {
+    position : absolute;
+    height : $header-top;
+    width : 100%;
+    background: #353373;
+    z-index : -1;
+}
+
+.dzlyy-header-bottom {
+    position : absolute;
+    top : $header-top;
+    height : $header-bottom;
+    width : 100%;
+    z-index : 0;
+}
+
+.dzlyy-header-img {
+    height : $header-height;
+    margin-bottom : 2px;
 }
 
 .dzlyy-content {
@@ -32,4 +56,5 @@ $footer-height : 50px;
     height : $footer-height;
     width : 100%;
     border-top : solid 1px;
+    border-radius : 25px;
 }

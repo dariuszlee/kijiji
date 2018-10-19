@@ -1,3 +1,4 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-ReactDOM.render(React.createElement("h1", null, "Hello   , world!"), document.getElementById('dzlyy-react-app'));
+import Main from 'main.js';
+ReactDOM.render(React.createElement(Main, null), document.getElementById('dzlyy-react-app'));

@@ -1,6 +1,8 @@
 var gulp = require('gulp')
 var sass = require('gulp-sass')
 
+var babel = require('gulp-babel')
+
 var webpack = require('webpack')
 const webpackStream = require('webpack-stream');
 const webpackConfig = require('./webpack.config.js');
@@ -11,15 +13,28 @@ gulp.task('styles', function() {
         .pipe(gulp.dest('./spa/static/'));
 });
 
-gulp.task('watch', function() {
-    gulp.watch('spa/scss/*', ['styles'])
-    gulp.watch('spa/js/*', ['react'])
-});
+gulp.task('babel', function(){
+    return gulp.src('spa/jsx/*.jsx')
+        .pipe(babel({plugins: ['transform-react-jsx']}))
+        .pipe(gulp.dest('spa/js/'))
+})
 
-gulp.task('react', function(){
-    return gulp.src('spa/js/*.jsx')
+gulp.task('react', ['babel'], function(){
+    return gulp.src('spa/js/*.js')
         .pipe(webpackStream(webpackConfig), webpack)
         .pipe(gulp.dest('spa/static/'));
 });
 
-gulp.task('default', ['styles', 'react', 'watch']);
+gulp.task('imgs', function(){
+    return gulp.src('assets/*.png')
+        .pipe(gulp.dest('spa/static'));
+})
+
+gulp.task('watch', function() {
+    gulp.watch('spa/scss/*', ['styles'])
+    gulp.watch('spa/js/*', ['react'])
+    gulp.watch('assets/*.png', ['imgs'])
+});
+
+gulp.task('build', ['styles', 'react', 'imgs'])
+gulp.task('default', ['build', 'watch']);

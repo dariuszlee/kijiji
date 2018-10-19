@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import Main from 'main.js'
+
 ReactDOM.render(
-  <h1>Hello   , world!</h1>,
+  <Main />,
   document.getElementById('dzlyy-react-app')
 )
