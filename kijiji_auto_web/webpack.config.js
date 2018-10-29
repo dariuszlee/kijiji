@@ -1,10 +1,4 @@
 module.exports = {
-  // entry: {
-  //     files : [
-  //         'spa/js/app.js',
-  //         'spa/js/main.js'
-  //     ]
-  // },
   output: {
     filename: 'app.js',
   },

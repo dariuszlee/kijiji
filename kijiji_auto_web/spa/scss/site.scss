@@ -28,6 +28,8 @@ $footer-height : 50px;
 }
 
 .dzlyy-header-img {
+    position : absolute;
+    top : -$header-top;
     height : $header-height;
     margin-bottom : 2px;
 }
@@ -45,7 +47,13 @@ $footer-height : 50px;
     height : 100%;
 }
 
-.dzlyy-app{
+.dzlyy-app-container {
+}
+
+.dzlyy-app {
+    border : solid 1px black;
+    border-radius: 10px;
+    max-width : 700px;
 }
 
 .dzlyy-footer-push {
@@ -57,4 +65,82 @@ $footer-height : 50px;
     width : 100%;
     border-top : solid 1px;
     border-radius : 25px;
+}
+
+// Status bar
+
+$line-position : 40px;
+$line-width : 3px;
+$line-length : 400px;
+$bubble-amount : 4;
+$bubble-radius : 15px;
+$bubble-end-spaces : 40px;
+$bubble-spacing : $line-length / ($bubble-amount + 1);
+$text-width : 60px;
+$text-position : 50px;
+$text-height : 40px;
+
+$progress-bar-total-height : $text-position + $text-height;
+
+.dzlyy-progress-bar-container {
+    width : $line-length;
+    z-index : 0;
+    position : relative;
+    height : $progress-bar-total-height;
+}
+
+.dzlyy-line-container {
+}
+
+.dzlyy-line-img {
+    border-top : solid $line-width grey;
+    top : $line-position;
+    width : 100%;
+    z-index : 1;
+    position : absolute;
+}
+
+.dzlyy-line-bubble {
+    width : $bubble-radius;
+    height : $bubble-radius;
+    border : 2px solid grey;
+    border-radius: $bubble-radius;
+    position : absolute;
+    top : $line-position - ($bubble-radius / 2) + ($line-width / 2);
+    z-index : 2;
+}
+
+.dzlyy-bubble-active {
+    background-color : green;
+}
+
+.dzlyy-bubble-inactive {
+    background-color : #FFFFFF;
+}
+
+.dzlyy-line-text {
+    top : $line-position * 2;
+}
+
+@for $i from 1 through ($bubble-amount) {
+    .dzlyy-bubble-#{$i} { 
+        left : ($bubble-spacing * $i) - ($bubble-radius / 2);
+    }
+    .dzlyy-bubble-text-#{$i} { 
+        position : absolute;
+        left : ($bubble-spacing * $i) - ($text-width / 2);
+        top : $text-position;
+        width : $text-width;
+        height : $text-height;
+        vertical-align : middle;
+        font-size : 0.8em;
+        text-align : center;
+        font-family : "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+    }
+}
+
+// ModularForm
+.dzlyy-mod-form {
+    height : 200px;
+    background-color: black;
 }

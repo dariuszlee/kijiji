@@ -24,6 +24,7 @@
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "gulp-babel": "^8.0.0",
+    "gulp-sourcemaps": "^2.6.4",
     "webpack": "^4.21.0",
     "webpack-command": "^0.4.1"
   }

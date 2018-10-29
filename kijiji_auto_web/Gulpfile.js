@@ -2,6 +2,7 @@ var gulp = require('gulp')
 var sass = require('gulp-sass')
 
 var babel = require('gulp-babel')
+var sourcemaps = require('gulp-sourcemaps')
 
 var webpack = require('webpack')
 const webpackStream = require('webpack-stream');
@@ -15,7 +16,9 @@ gulp.task('styles', function() {
 
 gulp.task('babel', function(){
     return gulp.src('spa/jsx/*.jsx')
+        .pipe(sourcemaps.init())
         .pipe(babel({plugins: ['transform-react-jsx'], presets: ['@babel/env']}))
+        .on('error', console.error.bind(console))
         .pipe(gulp.dest('spa/js/'))
 })
 
@@ -32,7 +35,7 @@ gulp.task('imgs', function(){
 
 gulp.task('watch', function() {
     gulp.watch('spa/scss/*', ['styles'])
-    gulp.watch('spa/jsx/*', ['react'])
+    gulp.watch('spa/jsx/*.jsx', ['react'])
     gulp.watch('assets/*.png', ['imgs'])
 });
 
