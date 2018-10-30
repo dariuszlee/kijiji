@@ -7,7 +7,7 @@ export default class ProgressBar extends React.Component {
     }
 
     render(){
-        return <div className="dzlyy-progress-bar-container dzlyy-line-container mx-auto">
+        return <div className="dzlyy-progress-bar-container dzlyy-line-container">
                     <div className="dzlyy-line-img"/>
                     <div className={ "dzlyy-line-bubble dzlyy-bubble-1 " + (this.state.Stage === "login" ? "dzlyy-bubble-active" : "dzlyy-bubble-inactive")} />
                     <div className={"dzlyy-line-bubble dzlyy-bubble-2 " + (this.state.Stage === "accounts" ? "dzlyy-bubble-active" : "dzlyy-bubble-inactive")} />

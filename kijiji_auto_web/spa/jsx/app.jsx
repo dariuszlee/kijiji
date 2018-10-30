@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 // import Main from './main'
 import ProgressBar from './progressbar'
 import ModularForm from './modularform'
+import AppControls from './appcontrols'
 
 class MainApp extends React.Component {
     constructor(props) {
@@ -12,10 +13,20 @@ class MainApp extends React.Component {
             Stage : 'login'
         }
     }
+
+    changeStage(newStage) {
+        this.state = {
+            Stage : newStage
+        }
+    }
+
     render() {
-        return  <div className="dzlyy-app my-5 container d-flex flex-column">
+        return  <div className="dzlyy-app mt-3 mb-5 d-flex flex-column">
                     <ProgressBar Stage={this.state.Stage} />
-                    <ModularForm />
+                    <div className="d-flex flex-fill">
+                        <AppControls />
+                        <ModularForm />
+                    </div>
                 </div>;
     }
 }

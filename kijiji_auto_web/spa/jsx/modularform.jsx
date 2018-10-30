@@ -6,6 +6,6 @@ export default class ModularForm extends React.Component {
     }
 
     render(){
-        return <div className="dzlyy-mod-form"></div>;
+        return <div className="flex-fill dzlyy-mod-form"></div>;
     }
 }

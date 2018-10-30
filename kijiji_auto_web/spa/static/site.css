@@ -34,9 +34,10 @@
   height: 100%; }
 
 .dzlyy-app {
-  border: solid 1px black;
   border-radius: 10px;
-  max-width: 700px; }
+  max-width: 2300px;
+  min-width: 500px;
+  margin: 0; }
 
 .dzlyy-footer-push {
   height: 50px; }
@@ -49,9 +50,10 @@
 
 .dzlyy-progress-bar-container {
   width: 400px;
+  height: 90px;
   z-index: 0;
   position: relative;
-  height: 90px; }
+  margin: 0 auto 0 auto; }
 
 .dzlyy-line-img {
   border-top: solid 3px grey;
@@ -135,5 +137,32 @@
   font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; }
 
 .dzlyy-mod-form {
-  height: 200px;
-  background-color: black; }
+  border: 1px solid #353373;
+  border-radius: 10px;
+  margin: 3px; }
+
+.dzlyy-global-controls {
+  background: #353373;
+  width: 60px;
+  border: 1px 1px 0 0 solid white;
+  border-radius: 9px; }
+
+.dzlyy-control {
+  position: relative;
+  height: 60px;
+  border-bottom: solid white 1px; }
+
+.dzlyy-icon-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 2px 5px 2px 5px;
+  border: white 2px solid;
+  border-radius: 5px;
+  transform: translate(-50%, -50%); }
+
+.dzlyy-control-icon {
+  height: 50%;
+  width: 50%;
+  margin: auto auto auto auto;
+  color: white; }

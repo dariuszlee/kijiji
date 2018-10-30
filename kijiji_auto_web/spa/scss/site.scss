@@ -51,9 +51,11 @@ $footer-height : 50px;
 }
 
 .dzlyy-app {
-    border : solid 1px black;
+    // border : solid 1px black;
     border-radius: 10px;
-    max-width : 700px;
+    max-width : 2300px;
+    min-width : 500px;
+    margin : 0;
 }
 
 .dzlyy-footer-push {
@@ -84,9 +86,10 @@ $progress-bar-total-height : $text-position + $text-height;
 
 .dzlyy-progress-bar-container {
     width : $line-length;
+    height : $progress-bar-total-height;
     z-index : 0;
     position : relative;
-    height : $progress-bar-total-height;
+    margin : 0 auto 0 auto;
 }
 
 .dzlyy-line-container {
@@ -141,6 +144,41 @@ $progress-bar-total-height : $text-position + $text-height;
 
 // ModularForm
 .dzlyy-mod-form {
-    height : 200px;
-    background-color: black;
+    // background-color: black;
+    border : 1px solid #353373;
+    border-radius : 10px;
+    margin : 3px;
+}
+
+// GlobalControls
+$control-width : 60px;
+$button-height : $control-width;
+.dzlyy-global-controls {
+    background: #353373;
+    width : $control-width;
+    border: 1px 1px 0 0 solid white;
+    border-radius : 9px;
+}
+
+.dzlyy-control {
+    position : relative;
+    height : $button-height;
+    border-bottom : solid white 1px;
+}
+
+.dzlyy-icon-wrapper {
+    position : absolute;
+    top : 50%;
+    left : 50%;
+    padding: 2px 5px 2px 5px;
+    border : white 2px solid;
+    border-radius : 5px;
+    transform : translate(-50%, -50%)
+}
+
+.dzlyy-control-icon {
+    height : 50%;
+    width : 50%;
+    margin : auto auto auto auto;
+    color : white;
 }
